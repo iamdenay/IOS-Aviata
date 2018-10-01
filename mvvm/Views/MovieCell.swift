@@ -4,7 +4,6 @@ import Reusable
 import Lightbox
 import Sugar
 import Kingfisher
-import UICircularProgressRing
 
 final class MovieCell: UITableViewCell, Reusable {
     
@@ -81,9 +80,15 @@ final class MovieCell: UITableViewCell, Reusable {
 
     func configure(movie:Movie,upcoming:Bool, vc:UIViewController) {
         titleLabel.text = movie.title
-        let url = URL(string: "https://image.tmdb.org/t/p/w500\(String(describing: movie.posterPath!))")
-        posterImage.kf.setImage(with: url)
-        overiewLabel.text = movie.overview!
+        if let path = movie.posterPath{
+            let url = URL(string: "https://image.tmdb.org/t/p/w500\(String(describing: path))")
+            posterImage.kf.setImage(with: url, placeholder: #imageLiteral(resourceName: "placeholder"))
+        } else {
+            posterImage.image = #imageLiteral(resourceName: "placeholder")
+        }
+        if let desc = movie.overview{
+            overiewLabel.text = desc
+        }
         if !upcoming {
             votesLabel.text = "\(String(describing: movie.score!)) of \(String(describing: movie.votes!)) votes"
         }

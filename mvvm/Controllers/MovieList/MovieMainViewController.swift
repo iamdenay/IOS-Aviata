@@ -8,7 +8,7 @@ import ChameleonFramework
 final class MovieMainViewController: BaseViewController {
     
     fileprivate lazy var rightButtonItem = UIBarButtonItem.init(
-        barButtonSystemItem: UIBarButtonSystemItem.edit,
+        barButtonSystemItem: UIBarButtonSystemItem.search,
         target: self,
         action: #selector(addTapped)
     )
@@ -31,7 +31,6 @@ final class MovieMainViewController: BaseViewController {
             )
             var options = SegmentioOptions(
                 backgroundColor: UIColor.flatBlack,
-                maxVisibleItems: 2,
                 scrollEnabled: true,
                 indicatorOptions: indicator,
                 horizontalSeparatorOptions: SegmentioHorizontalSeparatorOptions(
@@ -66,7 +65,7 @@ final class MovieMainViewController: BaseViewController {
                 animationDuration: 0.2
             )
             $0.setup(
-                content:[SegmentioItem(title: "Популярное", image: nil),SegmentioItem(title: "Скоро на экранах", image: nil)],
+                content:[SegmentioItem(title: "Popular", image: nil),SegmentioItem(title: "Upcoming", image: nil)],
                 style: SegmentioStyle.onlyLabel,
                 options: options
             )
@@ -87,7 +86,7 @@ final class MovieMainViewController: BaseViewController {
                     self.controller! = SoonMovieListViewController()
                     self.addChildViewController(self.controller!)
                     self.containerView.addSubview(self.controller!.view)
-                    self.navigationItem.rightBarButtonItem = nil
+                    self.navigationItem.rightBarButtonItem = self.rightButtonItem
                     self.controller!.didMove(toParentViewController: self)
                     
                 default:
@@ -120,7 +119,7 @@ final class MovieMainViewController: BaseViewController {
         self.navigationItem.rightBarButtonItem = rightButtonItem
         self.rightButtonItem.isEnabled = true
         view.addSubviews(segmentioView, containerView)
-        navigationItem.title = "Фильмы"
+        navigationItem.title = "Movies"
     }
     
     fileprivate func configureConstraints() {
@@ -145,7 +144,8 @@ final class MovieMainViewController: BaseViewController {
     }
     
     @objc func addTapped(){
-        
+        let vc = MyTableViewController()
+        self.navigationController?.pushViewController(vc, animated: true)
     }
 }
 

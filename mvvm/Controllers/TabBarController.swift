@@ -18,10 +18,12 @@ fileprivate struct MainTabBarItem {
 class TabBarViewController: UITabBarController {
     
     fileprivate let tabBarItems = [
-        MainTabBarItem(title: "Фильмы", icon: (#imageLiteral(resourceName: "movie"), #imageLiteral(resourceName: "movie")),
+        MainTabBarItem(title: "Movies", icon: (#imageLiteral(resourceName: "movie"), #imageLiteral(resourceName: "movie")),
                        controller: MovieMainViewController()),
-        MainTabBarItem(title: "Жанры", icon: ( #imageLiteral(resourceName: "genre"), #imageLiteral(resourceName: "genre")),
-                       controller: GenreListViewController())
+        MainTabBarItem(title: "Genres", icon: ( #imageLiteral(resourceName: "genre"), #imageLiteral(resourceName: "genre")),
+                       controller: GenreListViewController()),
+        MainTabBarItem(title: "Filter", icon: ( UIImage(named: "filter"), UIImage(named: "filter")),
+                       controller: FilteredMovieListViewController())
         
     ]
     
@@ -33,7 +35,7 @@ class TabBarViewController: UITabBarController {
     
     fileprivate func configAppBar(){
         UINavigationBar.appearance().barTintColor = .flatBlackDark
-        UINavigationBar.appearance().tintColor = UIColor.flatBlack
+        UINavigationBar.appearance().tintColor = UIColor.white
         UINavigationBar.appearance().titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white, NSAttributedStringKey.font: UIFont(name: "AppleSDGothicNeo-Light", size: 20)!]
         UINavigationBar.appearance().layer.shadowRadius = 0
         UINavigationBar.appearance().layer.shadowOffset = CGSize(width: 0, height: 0.0)

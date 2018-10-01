@@ -7,3 +7,23 @@
 //
 
 import Foundation
+import ObjectMapper
+
+class Response : Mappable {
+    
+    var results: [Movie]?
+    var page: Int?
+    var totalPages:Int?
+    
+    
+    
+    required init?(map: Map) {
+        
+    }
+    
+    func mapping(map: Map) {
+        results <- map["results"]
+        page <- map["page"]
+        totalPages <- map["total_pages"]
+    }
+}

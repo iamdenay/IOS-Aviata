@@ -13,9 +13,16 @@ import Alamofire
 import AlamofireObjectMapper
 import ChameleonFramework
 import Sugar
+import Tactile
+import SVProgressHUD
 
 class PopularMovieListViewController: BaseViewController, UITableViewDataSource {
     
+    var page = 1
+    var totalPages = 1
+    var first = true
+    
+    fileprivate var tempMpvies = [Movie]()
     
     fileprivate var movies = [Movie]() {
         didSet {
@@ -46,8 +53,13 @@ class PopularMovieListViewController: BaseViewController, UITableViewDataSource 
     }
     
     fileprivate func loadData(){
-        MovieDBRepository().getPopular(){ res in
-            self.movies = res
+        SVProgressHUD.show()
+        MovieDBRepository().getPopular(page:page){ res in
+            SVProgressHUD.dismiss()
+            self.tempMpvies = res.results!
+            self.page = res.page!
+            self.totalPages = res.totalPages!
+            self.movies.append(contentsOf: self.tempMpvies)
         }
     }
 
@@ -67,6 +79,13 @@ class PopularMovieListViewController: BaseViewController, UITableViewDataSource 
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(for: indexPath) as MovieCell
+        if indexPath.row == movies.count-1 {
+            print("Last cell")
+            if page < totalPages {
+                page += 1
+                loadData()
+            }
+        }
         cell.contentView.backgroundColor = UIColor.flatBlack
         let whiteRoundedView : UIView = UIView(frame: CGRect(x: 10, y: 5, width: self.view.frame.size.width - 20, height: 200))
         
@@ -80,11 +99,16 @@ class PopularMovieListViewController: BaseViewController, UITableViewDataSource 
         cell.contentView.addSubview(whiteRoundedView)
         cell.contentView.sendSubview(toBack: whiteRoundedView)
         cell.configure(movie: movies[indexPath.row], upcoming: false, vc:self)
-//        cell.contentView.tap { tap in
-//            let vc = CourtViewController()
-//            vc.court = self.courts[indexPath.row]
-//            self.navigationController?.pushViewController(vc, animated: true)
-//        }
+        cell.contentView.tap { tap in
+            SVProgressHUD.show()
+            MovieDBRepository().getMovie(identifier: self.movies[indexPath.row].id!){ res in
+                SVProgressHUD.dismiss()
+                let vc = MovieDetailViewController()
+                vc.movie = res
+                self.navigationController?.pushViewController(vc, animated: true)
+            }
+            
+        }
         return cell
     }
 

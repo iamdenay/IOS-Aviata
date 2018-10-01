@@ -11,15 +11,16 @@ import Alamofire
 import AlamofireObjectMapper
 
 class MovieDBRepository {
-    func getPopular(completion: @escaping ([Movie]) -> ()){
+    func getPopular(page:Int,completion: @escaping (Response) -> ()){
         
         let reqURL = "https://api.themoviedb.org/3/movie/popular"
 
         let parameters: Parameters = [
-            "api_key": "1f6c189d328933bfd0c9b198db3f97a8"
+            "api_key": "1f6c189d328933bfd0c9b198db3f97a8",
+            "page":page
         ]
             
-        Alamofire.request(reqURL, parameters: parameters).responseArray(keyPath:"results") { (response: DataResponse<[Movie]>) in
+        Alamofire.request(reqURL, parameters: parameters).responseObject { (response: DataResponse<Response>) in
             print("Request: \(String(describing: response.request!))")
             print("Response: \(String(describing: response.response!))")
             print("Error: \(String(describing: response.error))")
@@ -28,6 +29,7 @@ class MovieDBRepository {
             if let res = response.result.value {
                 completion(res)
             }
+            
         }
     }
     
@@ -39,7 +41,7 @@ class MovieDBRepository {
             "api_key": "1f6c189d328933bfd0c9b198db3f97a8"
         ]
         
-        var movies : [Movie] = []
+
         
         Alamofire.request(reqURL, parameters: parameters).responseArray(keyPath:"results") { (response: DataResponse<[Movie]>) in
             print("Request: \(String(describing: response.request!))")
@@ -58,10 +60,10 @@ class MovieDBRepository {
         let reqURL = "https://api.themoviedb.org/3/movie/\(identifier)"
         
         let parameters: Parameters = [
-            "api_key": "1f6c189d328933bfd0c9b198db3f97a8"
+            "api_key": "1f6c189d328933bfd0c9b198db3f97a8",
+            "append_to_response":"credits,similar"
         ]
         
-        var movie : Movie?
         
         Alamofire.request(reqURL, parameters: parameters).responseObject { (response: DataResponse<Movie>) in
             print("Request: \(String(describing: response.request!))")
@@ -75,6 +77,54 @@ class MovieDBRepository {
             
         }
     }
+    
+    func getFilteredByYear(min:Int,max:Int, completion: @escaping ([Movie]) -> ()){
+        
+        let reqURL = "https://api.themoviedb.org/3/discover/movie"
+
+        let parameters: Parameters = [
+            "api_key": "1f6c189d328933bfd0c9b198db3f97a8",
+            "release_date.gte":"\(min)-01-01",
+            "release_date.lte":"\(max)-12-31",
+            "sort_by":"release_date.asc"
+        ]
+
+        
+        Alamofire.request(reqURL, parameters: parameters).responseArray(keyPath:"results") { (response: DataResponse<[Movie]>) in
+            print("Request: \(String(describing: response.request!))")
+            print("Response: \(String(describing: response.response!))")
+            print("Error: \(String(describing: response.error))")
+            print("Result: \(response.result)")
+            
+            if let res = response.result.value {
+                completion(res)
+            }
+            
+        }
+    }
+    
+    func getImages(identifier: Int, completion: @escaping ([MovieImage]) -> ()){
+        
+        let reqURL = "https://api.themoviedb.org/3/movie/\(identifier)/images"
+
+        let parameters: Parameters = [
+            "api_key": "1f6c189d328933bfd0c9b198db3f97a8",
+            "include_image_language":"en"
+        ]
+        
+        Alamofire.request(reqURL, parameters: parameters).responseArray(keyPath:"backdrops") { (response: DataResponse<[MovieImage]>) in
+            print("Request: \(String(describing: response.request!))")
+            print("Response: \(String(describing: response.response!))")
+            print("Error: \(String(describing: response.error))")
+            print("Result: \(response.result)")
+            
+            if let res = response.result.value {
+                completion(res)
+            }
+            
+        }
+    }
+
     func getGenres(completion: @escaping ([Genre]) -> ()){
         let reqURL = "https://api.themoviedb.org/3/genre/movie/list"
         
@@ -82,7 +132,6 @@ class MovieDBRepository {
             "api_key": "1f6c189d328933bfd0c9b198db3f97a8"
         ]
         
-        var genres : [Genre] = []
         
         Alamofire.request(reqURL, parameters: parameters).responseArray(keyPath:"genres") { (response: DataResponse<[Genre]>) in
             print("Request: \(String(describing: response.request!))")
@@ -96,5 +145,57 @@ class MovieDBRepository {
             
         }
     }
+    
+    func getByGenre(identifier:Int, completion: @escaping ([Movie]) -> ()){
+        
+        let reqURL = "https://api.themoviedb.org/3/discover/movie"
+
+        let parameters: Parameters = [
+            "api_key": "1f6c189d328933bfd0c9b198db3f97a8",
+            "language":"en-US",
+            "sort_by":"popularity.desc",
+            "include_adult":"false", // false? :)
+            "include_video":"false",
+            "with_genres":"\(identifier)"
+        ]
+        
+        Alamofire.request(reqURL, parameters: parameters).responseArray(keyPath:"results") { (response: DataResponse<[Movie]>) in
+            print("Request: \(String(describing: response.request!))")
+            print("Response: \(String(describing: response.response!))")
+            print("Error: \(String(describing: response.error))")
+            print("Result: \(response.result)")
+            
+            if let res = response.result.value {
+                completion(res)
+            }
+            
+        }
+    }
+    
+    func searchByName(query:String, completion: @escaping ([Movie]) -> ()){
+        
+        let reqURL = "https://api.themoviedb.org/3/search/movie"
+
+        let parameters: Parameters = [
+            "api_key": "1f6c189d328933bfd0c9b198db3f97a8",
+            "language":"en-US",
+            "include_adult":"false", // false? :)
+            "query":query
+        ]
+        
+        Alamofire.request(reqURL, parameters: parameters).responseArray(keyPath:"results") { (response: DataResponse<[Movie]>) in
+            print("Request: \(String(describing: response.request!))")
+            print("Response: \(String(describing: response.response!))")
+            print("Error: \(String(describing: response.error))")
+            print("Result: \(response.result)")
+            
+            if let res = response.result.value {
+                completion(res)
+            }
+            
+        }
+    }
+    
+    
 
 }

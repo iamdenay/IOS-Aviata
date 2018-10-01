@@ -13,6 +13,10 @@ final class GenreCell: UITableViewCell, Reusable {
         $0.textAlignment = .left
     }
     
+    fileprivate lazy var bottomSeparator = UIView().then {
+        $0.backgroundColor = UIColor(red: 0.46, green: 0.46, blue: 0.46, alpha: 0.2)
+    }
+    
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         configureViews()
@@ -25,7 +29,7 @@ final class GenreCell: UITableViewCell, Reusable {
     
     fileprivate func configureViews() {
         contentView.backgroundColor = .flatBlack
-        contentView.addSubviews(titleLabel)
+        contentView.addSubviews(titleLabel, bottomSeparator)
     }
     
     fileprivate func configureConstraints() {
@@ -34,11 +38,21 @@ final class GenreCell: UITableViewCell, Reusable {
             CenterY(),
             Left(24)
         )
+        bottomSeparator.easy.layout(
+            Left(0),
+            Right(0),
+            Bottom(0),
+            Height(1)
+        )
         
     }
     
     func configure(genre:Genre, vc:UIViewController) {
         titleLabel.text = genre.name
+    }
+    
+    func configure(text:String?) {
+        titleLabel.text = text
     }
 }
 

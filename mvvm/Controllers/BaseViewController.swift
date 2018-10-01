@@ -8,12 +8,12 @@ class BaseViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         UINavigationBar.appearance().barTintColor = .flatBlackDark
-        UINavigationBar.appearance().tintColor = UIColor.flatBlack
+        UINavigationBar.appearance().tintColor = UIColor.white
         UINavigationBar.appearance().titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white, NSAttributedStringKey.font: UIFont(name: "AppleSDGothicNeo-Light", size: 20)!]
         UINavigationBar.appearance().layer.shadowRadius = 0
         UINavigationBar.appearance().layer.shadowOffset = CGSize(width: 0, height: 0.0)
         UINavigationBar.appearance().isTranslucent = false
-        view.backgroundColor = .flatNavyBlue
+        view.backgroundColor = .flatBlack
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
         self.hideKeyboardWhenTappedAround()
     }

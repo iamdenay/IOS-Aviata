@@ -13,6 +13,7 @@ import Alamofire
 import AlamofireObjectMapper
 import ChameleonFramework
 import Sugar
+import SVProgressHUD
 
 class SoonMovieListViewController: BaseViewController, UITableViewDataSource {
     
@@ -45,7 +46,9 @@ class SoonMovieListViewController: BaseViewController, UITableViewDataSource {
     }
     
     fileprivate func loadData(){
+        SVProgressHUD.show()
         MovieDBRepository().getUpcoming(){ res in
+            SVProgressHUD.dismiss()
             self.movies = res
         }
     }
@@ -79,11 +82,16 @@ class SoonMovieListViewController: BaseViewController, UITableViewDataSource {
         cell.contentView.addSubview(whiteRoundedView)
         cell.contentView.sendSubview(toBack: whiteRoundedView)
         cell.configure(movie: movies[indexPath.row], upcoming: true, vc:self)
-        //        cell.contentView.tap { tap in
-        //            let vc = CourtViewController()
-        //            vc.court = self.courts[indexPath.row]
-        //            self.navigationController?.pushViewController(vc, animated: true)
-        //        }
+        cell.contentView.tap { tap in
+            SVProgressHUD.show()
+            MovieDBRepository().getMovie(identifier: self.movies[indexPath.row].id!){ res in
+                SVProgressHUD.dismiss()
+                let vc = MovieDetailViewController()
+                vc.movie = res
+                self.navigationController?.pushViewController(vc, animated: true)
+            }
+            
+        }
         return cell
     }
     

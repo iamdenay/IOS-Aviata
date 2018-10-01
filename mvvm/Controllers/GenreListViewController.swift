@@ -33,6 +33,7 @@ class GenreListViewController: BaseViewController, UITableViewDataSource {
             $0.allowsSelection = false
             $0.sectionHeaderHeight = 70
             $0.backgroundColor = .flatBlack
+            $0.separatorStyle = .none
         }
     }()
     
@@ -50,7 +51,7 @@ class GenreListViewController: BaseViewController, UITableViewDataSource {
     }
     
     fileprivate func configureViews(){
-        navigationItem.title = "Жанры"
+        navigationItem.title = "Genres"
         view.addSubview(tableView)
     }
     
@@ -67,11 +68,11 @@ class GenreListViewController: BaseViewController, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(for: indexPath) as GenreCell
         cell.configure(genre: genres[indexPath.row], vc:self)
-        //        cell.contentView.tap { tap in
-        //            let vc = CourtViewController()
-        //            vc.court = self.courts[indexPath.row]
-        //            self.navigationController?.pushViewController(vc, animated: true)
-        //        }
+        cell.contentView.tap { tap in
+            let vc = GenresMovieListViewController()
+            vc.genre = self.genres[indexPath.row]
+            self.navigationController?.pushViewController(vc, animated: true)
+        }
         return cell
     }
     

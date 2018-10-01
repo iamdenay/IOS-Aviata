@@ -1,9 +1,15 @@
-//
-//  MovieImage.swift
-//  mvvm
-//
-//  Created by Atabay Ziyaden on 9/28/18.
-//  Copyright © 2018 IcyFlame Studios. All rights reserved.
-//
 
 import Foundation
+import ObjectMapper
+
+class MovieImage : Mappable {
+    var filePath:String?
+    
+    required init?(map: Map) {
+        
+    }
+    
+    func mapping(map: Map) {
+        filePath <- map["file_path"]
+    }
+}

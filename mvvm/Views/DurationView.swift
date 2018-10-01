@@ -3,11 +3,11 @@ import EasyPeasy
 import Sugar
 import ChameleonFramework
 
-final class MovieCardView : UIView {
+final class DurationView : UIView {
 
     fileprivate lazy var durationLabel = UILabel().then {
         $0.textColor = .flatWhite
-        $0.font = UIFont(name: "AppleSDGothicNeo-Light", size: 20)
+        $0.font = UIFont(name: "AppleSDGothicNeo-Bold", size: 14)
         $0.numberOfLines = 1
         $0.textAlignment = .left
     }
@@ -36,8 +36,9 @@ final class MovieCardView : UIView {
     }
     
     func configure(movie:Movie){
-        let h = movie.duration! / 60
-        let m = movie.duration! % 60
+        let dur = movie.duration ?? 0
+        let h = dur / 60
+        let m = dur % 60
         var genresString = ""
         for genre in movie.genres! {
             genresString += genre.name! + " "
